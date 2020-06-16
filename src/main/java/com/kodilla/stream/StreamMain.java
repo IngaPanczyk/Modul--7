@@ -25,8 +25,9 @@ public class StreamMain {
         //Zadanie 1
         System.out.println("After beautify");
         PoemBeautifier poemBeautifier = new PoemBeautifier();
-        poemBeautifier.beautify("This is the most beautiful poem in the world", (poem) -> poem + " +++ more beautyfull");
+        poemBeautifier.beautify("This is the most beautiful poem in the world", (poem) -> "Attention! " + poem + " +++ more beautyfull");
         poemBeautifier.beautify("This is the most beautiful poem in the world", (poem) -> poem.toUpperCase());
-        poemBeautifier.beautify("This is the most beautiful poem in the world", (poem) -> poem.replace("beautiful","beautiful beautiful beautiful"));
+        poemBeautifier.beautify("This is the most beautiful poem in the world", (poem) -> poem.toLowerCase());
+        poemBeautifier.beautify("This is the most beautiful poem in the world", (poem) -> poem.replace("beautiful", "beautiful beautiful beautiful"));
     }
 }
