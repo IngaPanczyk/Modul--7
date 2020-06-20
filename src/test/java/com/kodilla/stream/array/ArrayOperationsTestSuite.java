@@ -14,9 +14,9 @@ public class ArrayOperationsTestSuite implements ArrayOperations {
             numbers[i] = i + 1;
         //When
         //Wywołuję metodę getAverage na obiekcie numbers
-        double average = getAverage(numbers);
+        double average = ArrayOperations.getAverage(numbers);
         //Then
         //Sprawdzam policzoną średnią
-        Assert.assertEquals(3.0,average,0);
+        Assert.assertEquals(10.5, average, 0);
     }
 }
