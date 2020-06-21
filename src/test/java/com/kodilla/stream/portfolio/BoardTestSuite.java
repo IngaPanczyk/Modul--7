@@ -2,9 +2,14 @@ package com.kodilla.stream.portfolio;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class BoardTestSuite {
     public Board prepareTestData() {
@@ -78,23 +83,73 @@ public class BoardTestSuite {
         //Then
         Assert.assertEquals(3, project.getTaskLists().size());
     }
-   /* //Test z zadania 6
+    //Test z zadania 6
+    // wykorzystaniem sum() i count()
     @Test
-    public void testAddTaskListAverageWorkingOnTask()() {
+    public void testAddTaskListAverageWorkingOnTask() {
         //Given
         Board project = prepareTestData();
 
         //When
+        //tworzę roboczą listę zadań o takiej samej nazwie
         List<TaskList> inProgressTasks = new ArrayList<>();
+        //dodaję do niej listę "In progress"
         inProgressTasks.add(new TaskList("In progress"));
-        long longTasks = project.getTaskLists().stream()
+        //Tworzę i uruchamiam strumień na kolekcji getTaskLists() i przypisuję wynik do zmiennej countTasks.
+        long countTasks = project.getTaskLists().stream()
+                //filtruję i do mojego strumienia trafią tylko te listy, które znajdują się na liście inProgressTasks
                 .filter(inProgressTasks::contains)
+                //spłaszczenie strumienia, trafią do niego konkretne zadania a nie obiekty je przechowujące
                 .flatMap(tl -> tl.getTasks().stream())
+                //przetwarzamy strumień na strumień dat, mówiących o tym kiedy zadanie zostało utworzone
                 .map(t -> t.getCreated())
-                .filter(d -> d.compareTo(LocalDate.now().minusDays(10)) <= 0)
+                //.filter(d -> d.compareTo(LocalDate.now().minusDays(10)) <= 0)
                 .count();
 
+        List<TaskList> inProgressTasks1 = new ArrayList<>();
+        //dodaję do niej listę "In progress"
+        inProgressTasks1.add(new TaskList("In progress"));
+        //Tworzę i uruchamiam strumień na kolekcji getTaskLists() i przypisuję wynik do zmiennej countTasks.
+        long countDays = project.getTaskLists().stream()
+                //filtruję i do mojego strumienia trafią tylko te listy, które znajdują się na liście inProgressTasks1
+                .filter(inProgressTasks1::contains)
+                //spłaszczenie strumienia, trafią do niego konkretne zadania a nie obiekty je przechowujące
+                .flatMap(tl -> tl.getTasks().stream())
+                //przetwarzamy strumień na strumień dat, mówiących o tym kiedy zadanie zostało utworzone
+                .map(t -> t.getCreated())
+                //przetwarzam strumień na strumień ilości dni między datami
+                .mapToLong(t -> ChronoUnit.DAYS.between(t, LocalDate.now()))
+                //zsumowanie ilości dni
+                .sum();
+        long average = countDays / countTasks;
+
         //Then
-        Assert.assertEquals(2, longTasks);
-    }*/
+        Assert.assertEquals(10, average);
+    }
+    // Z wykorzystaniem average()
+    @Test
+    public void testAddTaskListAverageWorkingOnTask1() {
+        //Given
+        Board project = prepareTestData();
+
+        //When
+        List<TaskList> inProgressTasks1 = new ArrayList<>();
+        //dodaję do niej listę "In progress"
+        inProgressTasks1.add(new TaskList("In progress"));
+        //Tworzę i uruchamiam strumień na kolekcji getTaskLists() i przypisuję wynik do zmiennej countTasks.
+        double countAverage = project.getTaskLists().stream()
+                //filtruję i do mojego strumienia trafią tylko te listy, które znajdują się na liście inProgressTasks1
+                .filter(inProgressTasks1::contains)
+                //spłaszczenie strumienia, trafią do niego konkretne zadania a nie obiekty je przechowujące
+                .flatMap(tl -> tl.getTasks().stream())
+                //przetwarzamy strumień na strumień dat, mówiących o tym kiedy zadanie zostało utworzone
+                .map(t -> t.getCreated())
+                //przetwarzam strumień na strumień ilości dni między datami
+                .mapToDouble(t -> ChronoUnit.DAYS.between(t, LocalDate.now()))
+                //liczę średnią
+                .average().getAsDouble();
+
+        //Then
+        Assert.assertEquals(10, countAverage, 0);
+    }
 }
